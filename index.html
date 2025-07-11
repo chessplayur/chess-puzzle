@@ -14,28 +14,30 @@
 <body>
   <div id="myBoard" style="width: 400px"></div>
 
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>  <!-- Add jQuery here -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> <!-- jQuery -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard.js/1.0.0/chessboard.min.js"></script>
-  
-  <script>
-    const game = new Chess('r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 2 4'); // Sample puzzle
 
-    const board = Chessboard('myBoard', {
-      draggable: true,
-      position: game.fen(),
-      onDragStart: function (source, piece) {
-        if (game.game_over() || piece[0] !== game.turn()) {
-          return false;
+  <script>
+    $(document).ready(function() {
+      const game = new Chess('r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 2 4');
+
+      const board = Chessboard('myBoard', {
+        draggable: true,
+        position: game.fen(),
+        onDragStart: function (source, piece) {
+          if (game.game_over() || piece[0] !== game.turn()) {
+            return false;
+          }
+        },
+        onDrop: function (source, target) {
+          const move = game.move({ from: source, to: target, promotion: 'q' });
+          if (move === null) return 'snapback';
+        },
+        onSnapEnd: function () {
+          board.position(game.fen());
         }
-      },
-      onDrop: function (source, target) {
-        const move = game.move({ from: source, to: target, promotion: 'q' });
-        if (move === null) return 'snapback';
-      },
-      onSnapEnd: function () {
-        board.position(game.fen());
-      }
+      });
     });
   </script>
 </body>
